@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
 import os
 
 db = SQLAlchemy()
+migrate = Migrate()
 DB_NAME = 'database.db'
 
 
@@ -12,6 +14,7 @@ def create_app():
     app.config["SECRET_KEY"] = 'ajnjfgfhfn!1tyuiop[92vgb9r5'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
+    Migrate().init_app(app, db)
 
     # Register blueprints
     from .views import mainBlueprint
@@ -25,6 +28,8 @@ def create_app():
     from .models import User, Recipe
 
     create_database(app)
+
+    migrate = Migrate(app,db)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.signin'  # sets the endpoint for the login page. will redirect to the login page

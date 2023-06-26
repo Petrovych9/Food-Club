@@ -19,6 +19,9 @@ class Recipe(db.Model):
     description = db.Column(db.Text)
     ingredients = db.Column(db.Text)
     image = db.Column(db.Text)
+    # new column 26.06.2023
+    status = db.Column(db.String(20))
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
