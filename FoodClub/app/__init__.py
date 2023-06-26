@@ -29,8 +29,6 @@ def create_app():
 
     create_database(app)
 
-    migrate = Migrate(app,db)
-
     login_manager = LoginManager()
     login_manager.login_view = 'auth.signin'  # sets the endpoint for the login page. will redirect to the login page
     login_manager.init_app(app)
@@ -44,6 +42,5 @@ def create_app():
 
 def create_database(app):
     with app.app_context():
-        db.drop_all()
         db.create_all()
         # print("Database created!")

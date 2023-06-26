@@ -39,11 +39,17 @@ def new_recipe():
         description = request.form['description']
         ingredients = request.form['ingredients']
         image = request.files['photo']
-        print(request.form, dish_name)
-        if dish_name == '':
-            if request.form['create_button'] == 'create_button':
+        button = request.form['button']
+
+        print(request.form)
+        if dish_name != '':
+            if button == 'Drafts':
+                status = 'Drafts'
+            elif button == 'Published':
                 status = 'Published'
-            else: status = 'Drafts'
+            else:
+                flask.flash('Default status', category='error')
+                status = "default"
 
             new_rec = Recipe(
                 dish_name=dish_name,
@@ -55,7 +61,11 @@ def new_recipe():
                 user_id=current_user.id)
             db.session.add(new_rec)
             db.session.commit()
-            flask.flash("Recipe created", category="success")
+            if status =='Published':
+                flask.flash("Recipe Published!", category="success")
+            elif status == 'Drafts':
+                flask.flash("Recipe in your drafts!", category="success")
+            else:flask.flash("Occur some error. Try again", category="error")
         else: flask.flash("Enter a dish name", category='error')
     return render_template('new-recipe.html', menu=menu(), user=current_user)
 
@@ -63,18 +73,14 @@ def new_recipe():
 @mainBlueprint.route('/my-draft-recipes', methods=["POST", 'GET'])
 @login_required
 def draft_recipes():
-    return render_template('draft-recipes.html', menu=menu(), user=current_user)
-
-
-# @mainBlueprint.add_app_template_filter('encode_base64')
-# def encode_base64(data):
-#     return base64.b64encode(data).decode('utf-8')
+    recipes = Recipe.query.filter_by(status='Drafts', user_id=current_user.id).all()
+    return render_template('all-recipes.html', menu=menu(), user=current_user, recipes=recipes)
 
 
 @mainBlueprint.route('/all-recipes', methods=["POST", 'GET'])
 @login_required
 def all_recipes():
-    recipes = Recipe.query.all()
+    recipes = Recipe.query.filter_by(status='Published').all()
     return render_template('all-recipes.html', menu=menu(), user=current_user, recipes=recipes)
 
 
