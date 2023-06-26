@@ -238,6 +238,11 @@ body{
     font-size: 12px;
     font-weight: 500;
 }
+
+.delete {
+    background:red;
+}
+
 .body-card__rating:before{
     content: "";
     width: 16px;
@@ -250,6 +255,9 @@ body{
     gap: 15px;
 
 }
+.body-card__edit{
+    background: #fff;}
+
 .body-card__like{
     background: #fff;}
 

@@ -3,30 +3,33 @@
 {% block content %}
 <div class="page__cards">
   {% for recipe in recipes %}
-  <div class="page__card card">
+  <form action="{{ url_for('main.edit_draft') }}" class="page__card card" method="post">
   <div class="card__image">
     <img src="data:image/jpeg;base64,{{recipe.image}}" alt="image">'
   </div>
   <div class="card__body body-card">
     <div class="body-card__text">
       <div class="body-card__title">
-        <a href="" class="body-card__link">{{ recipe.dish_name }}</a>
+        <div class="body-card__link">{{ recipe.dish_name }}</div>
       </div>
       <div class="body-card__time">{{ recipe.cooking_time }}</div>
     </div>
     <div class="body-card__icons">
       <div class="body-card__rating"></div>
       <div class="body-card__buttons">
-        <button class="body-card__like">
+        <button class="body-card__edit" type="submit" name="id" value="{{ recipe.id }}">
+          <img src="/static/images/drafts/01.svg">
+        </button>
+        <button class="body-card__like" name="like" value="like">
           <img src="{{ url_for('static', filename='images/all_recipe/like.svg') }}" alt="like">
         </button>
-        <button class="body-card__comment">
+        <button class="body-card__comment" name="comments" value="comments">
           <img src="{{ url_for('static', filename='images/all_recipe/comments.svg') }}" alt="comments">
         </button>
       </div>
     </div>
   </div>
-</div>
+</form>
   {% endfor %}
 </div>
 {% endblock %}

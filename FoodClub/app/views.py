@@ -70,11 +70,57 @@ def new_recipe():
     return render_template('new-recipe.html', menu=menu(), user=current_user)
 
 
-@mainBlueprint.route('/my-draft-recipes', methods=["POST", 'GET'])
+@mainBlueprint.route('/my-drafts', methods=["POST", 'GET'])
 @login_required
 def draft_recipes():
     recipes = Recipe.query.filter_by(status='Drafts', user_id=current_user.id).all()
-    return render_template('all-recipes.html', menu=menu(), user=current_user, recipes=recipes)
+    return render_template('my-drafts.html', menu=menu(), user=current_user, recipes=recipes)
+
+
+@mainBlueprint.route('/my-drafts-edit', methods=["POST", 'GET'])
+@login_required
+def edit_draft():
+    id = request.form['id']
+    print(request.form)
+    recipe = Recipe.query.filter_by(id=id).first()
+
+    return render_template('my-drafts-edit.html', menu=menu(), user=current_user, recipe=recipe)
+
+
+@mainBlueprint.route('/my-drafts-edit-update<int:recipe_id>', methods=["POST", 'GET'])
+@login_required
+def update_draft(recipe_id):
+    if request.method == 'POST':
+        dish_name = request.form['dish_name']
+        cooking_time = request.form['cooking_time']
+        description = request.form['description']
+        ingredients = request.form['ingredients']
+        # image = request.files['photo']
+        recipe = Recipe.query.filter_by(id=recipe_id).first()
+        button = request.form['button']
+        status = 0
+        if button == 'Drafts':
+            recipe.status ='Drafts'
+            db.session.commit()
+            print(recipe.status, recipe.id)
+            # todo update and save to drafts
+            flask.flash("Recipe saved to drafts!", category='success')
+
+        elif button == 'Published':
+            Recipe.status = 'Published'
+            print(Recipe.status, Recipe.id)
+            # todo update status in db
+            flask.flash("Recipe published!", category='success')
+
+        elif button == 'Delete':
+             # todo delete from db
+             flask.flash("Recipe deleted!", category='success')
+        else:
+            flask.flash('Default status', category='error')
+            status = "default"
+        print(status, '  ', request.form)
+
+    return flask.redirect(url_for('main.draft_recipes'))
 
 
 @mainBlueprint.route('/all-recipes', methods=["POST", 'GET'])
