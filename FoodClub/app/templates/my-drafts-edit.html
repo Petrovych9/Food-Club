@@ -5,7 +5,8 @@
   <!-- Author: FormBold Team -->
   <!-- Learn More: https://formbold.com -->
   <div class="formbold-form-wrapper">
-    <form action="{{ url_for('main.update_draft', recipe_id=recipe.id )}}" enctype="multipart/form-data" method="post">
+    {% set recipe_id = id %}
+    <form action="{{ url_for('main.update_draft', recipe_id=recipe_id) }}" enctype="multipart/form-data" method="post">
       <div class="formbold-form-title">
         <h2 class="a">Edit your recipe</h2>
         <p>
@@ -64,7 +65,7 @@
       <div class="photos">
         <img src="/static/images/new_recipe/01.svg" alt="add photo">
         <label for="photo">Select new photo</label>
-        <input type="file" name="photo" id="photo" accept=".jpeg, .png, .jpg">
+        <input type="file" name="photo" id="photo" accept=".jpeg, .png, .jpg" >
       </div>
 
       <button type="submit" class="formbold-btn drafts" name="button" value="Drafts">Save to drafts</button>

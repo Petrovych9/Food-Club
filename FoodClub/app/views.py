@@ -2,7 +2,7 @@ import os.path
 
 import flask
 import base64
-from flask import Blueprint,render_template, request, url_for
+from flask import Blueprint,render_template, request, url_for, redirect
 from flask_login import current_user, login_required
 from .menu import menu
 from .models import Recipe
@@ -73,54 +73,58 @@ def new_recipe():
 @mainBlueprint.route('/my-drafts', methods=["POST", 'GET'])
 @login_required
 def draft_recipes():
+    if request.form:
+        id = request.form['id']
+        print(request.form)
+        recipe = Recipe.query.filter_by(id=id).first()
+        return redirect(f'/my-drafts-edit/{id}')
+
     recipes = Recipe.query.filter_by(status='Drafts', user_id=current_user.id).all()
     return render_template('my-drafts.html', menu=menu(), user=current_user, recipes=recipes)
 
 
-@mainBlueprint.route('/my-drafts-edit', methods=["POST", 'GET'])
-@login_required
-def edit_draft():
-    id = request.form['id']
-    print(request.form)
-    recipe = Recipe.query.filter_by(id=id).first()
-
-    return render_template('my-drafts-edit.html', menu=menu(), user=current_user, recipe=recipe)
-
-
-@mainBlueprint.route('/my-drafts-edit-update<int:recipe_id>', methods=["POST", 'GET'])
+@mainBlueprint.route('/my-drafts-edit/<int:recipe_id>', methods=["POST", 'GET'])
 @login_required
 def update_draft(recipe_id):
+    recipe = Recipe.query.filter_by(id=recipe_id).first()
     if request.method == 'POST':
-        dish_name = request.form['dish_name']
-        cooking_time = request.form['cooking_time']
-        description = request.form['description']
-        ingredients = request.form['ingredients']
-        # image = request.files['photo']
-        recipe = Recipe.query.filter_by(id=recipe_id).first()
+        recipe.dish_name = request.form['dish_name']
+        recipe.cooking_time = request.form['cooking_time']
+        recipe.description = request.form['description']
+        recipe.ingredients = request.form['ingredients']
+        image = request.files['photo']
+        if image.filename == "":
+            print('Photo left old')
+        else:
+            recipe.image=convert_image(image)
+            print("Photo updated")
+
         button = request.form['button']
-        status = 0
+        status = recipe.status
         if button == 'Drafts':
             recipe.status ='Drafts'
             db.session.commit()
             print(recipe.status, recipe.id)
-            # todo update and save to drafts
             flask.flash("Recipe saved to drafts!", category='success')
 
         elif button == 'Published':
-            Recipe.status = 'Published'
-            print(Recipe.status, Recipe.id)
-            # todo update status in db
+            recipe.status = 'Published'
+            db.session.commit()
+            print(recipe.status, recipe.id)
             flask.flash("Recipe published!", category='success')
 
         elif button == 'Delete':
-             # todo delete from db
-             flask.flash("Recipe deleted!", category='success')
+            db.session.delete(recipe)
+            db.session.commit()
+            flask.flash("Recipe deleted!", category='success')
         else:
-            flask.flash('Default status', category='error')
-            status = "default"
-        print(status, '  ', request.form)
+            recipe.status = "Drafts"
+            recipe.dish_name = 'Causing some error'
+            db.session.commit()
+            flask.flash('Error!!! Set "Drafts" status for recipe. Edit and publish its later.', category='error')
 
-    return flask.redirect(url_for('main.draft_recipes'))
+        return redirect(url_for('main.draft_recipes'))
+    return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id)
 
 
 @mainBlueprint.route('/all-recipes', methods=["POST", 'GET'])

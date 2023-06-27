@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page__cards">
   {% for recipe in recipes %}
-  <form action="{{ url_for('main.edit_draft') }}" class="page__card card" method="post">
+  <form action="{{ url_for('main.draft_recipes') }}" class="page__card card" method="post">
   <div class="card__image">
     <img src="data:image/jpeg;base64,{{recipe.image}}" alt="image">'
   </div>
