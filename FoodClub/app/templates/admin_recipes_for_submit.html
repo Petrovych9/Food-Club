@@ -1,0 +1,43 @@
+{% extends 'admin.html' %}
+
+{% block admin_content %}
+<div class="content__table table">
+    <h1 class="table__title">Recipes for submit</h1>
+    <div class="table__body">
+        <ul class="table__list list-table">
+            <li class="list-table__items title">id
+                <div class="table__item title">status</div>
+                <div class="table__item title">user_id</div>
+                <div class="table__item title">dish_name</div>
+                <div class="table__item title">cooking_time</div>
+                <div class="table__item title">description</div>
+                <div class="table__item title">ingredients</div>
+                <div class="table__item title"></div>
+            </li>
+            {% for recipe in recipes %}
+            <li class="list-table__items">{{recipe.id}}
+                <div class="table__item">{{recipe.status}}</div>
+                <div class="table__item">{{recipe.user_id}}</div>
+                <div class="table__item">{{recipe.dish_name}}</div>
+                <div class="table__item">{{recipe.cooking_time}}</div>
+                <div class="table__item">{{recipe.description}}</div>
+                <div class="table__item">{{recipe.ingredients}}</div>
+                <form action="{{url_for('admin.dashboard_recipes_for_submit')}}" method="post" class="item-table__form">
+                    <button type="submit" class="table__item item-table_button" name="publish" value="{{recipe.id}}">Publish</button>
+                    <button type="submit" class="table__item item-table_button_secondary" name="return" value="{{recipe.id}}">Return</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

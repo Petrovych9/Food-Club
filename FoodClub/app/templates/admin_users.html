@@ -5,7 +5,7 @@
     <h1 class="table__title">Users</h1>
     <div class="table__body">
         <ul class="table__list list-table">
-            <ul class="list-table_items title">id
+            <ul class="list-table__items title">id
                 <li class="table__item title">email</li>
                 <li class="table__item title">role</li>
                 <li class="table__item title">firstname</li>
@@ -14,7 +14,7 @@
                 <li class="table__item title">Recipes</li>
             </ul>
             {% for user in users %}
-            <ul class="list-table_items">{{user.id}}
+            <ul class="list-table__items">{{user.id}}
                 <li class="table__item">{{user.email}}</li>
                 <li class="table__item">{{user.role}}</li>
                 <li class="table__item">{{user.firstname}}</li>

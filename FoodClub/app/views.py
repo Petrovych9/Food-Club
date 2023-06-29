@@ -45,8 +45,8 @@ def new_recipe():
         if dish_name != '':
             if button == 'Drafts':
                 status = 'Drafts'
-            elif button == 'Published':
-                status = 'Published'
+            elif button == 'need-submit':
+                status = 'need-submit'
             else:
                 flask.flash('Default status', category='error')
                 status = "default"
@@ -61,8 +61,8 @@ def new_recipe():
                 user_id=current_user.id)
             db.session.add(new_rec)
             db.session.commit()
-            if status =='Published':
-                flask.flash("Recipe Published!", category="success")
+            if status =='need-submit':
+                flask.flash("Recipe sent for submission!", category="success")
             elif status == 'Drafts':
                 flask.flash("Recipe in your drafts!", category="success")
             else:flask.flash("Occur some error. Try again", category="error")
@@ -105,11 +105,11 @@ def update_draft(recipe_id):
             print(recipe.status, recipe.id)
             flask.flash("Recipe saved to drafts!", category='success')
 
-        elif button == 'Published':
-            recipe.status = 'Published'
+        elif button == 'need-submit':
+            recipe.status = 'need-submit'
             db.session.commit()
             print(recipe.status, recipe.id)
-            flask.flash("Recipe published!", category='success')
+            flask.flash("Recipe sent for submission!", category="success")
 
         elif button == 'Delete':
             db.session.delete(recipe)

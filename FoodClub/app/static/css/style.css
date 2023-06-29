@@ -425,11 +425,10 @@ h1 {
 
 
 }
-.list-table_items{
+.list-table__items{
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    grid-gap: 10px;
-    column-max-width: 50px;
+    grid-gap: 4px;
     background: #e8e8e8;
     padding: 8px;
     word-wrap: break-word;
@@ -440,7 +439,29 @@ h1 {
     font-weight: 800;
     text-transform: capitalize;
 }
+
 /*Admin_recipes OFF*/
+
+/*Admin_recipe_for_submit ON*/
+.item-table__form{
+    display:flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item-table_button{
+    background: #3d3cc7;
+    color: #fff;
+    padding:4px;
+    border-radius: 4px;
+}
+.item-table_button_secondary{
+    background: #e21a36;
+    color: #fff;
+    padding:4px;
+    border-radius: 4px;
+}
+/*Admin_recipe_for_submit OFF*/
 
 /*Admin off*/
 
