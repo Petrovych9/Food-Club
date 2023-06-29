@@ -34,7 +34,7 @@
                             {% endif %}
                             {% endif %}
                             {% endfor %}
-                            {% if user.role == 'admin' %}
+                            {% if user.role == 'admin' or user.role == 'moderator' %}
                             <li class="menu__item">
                                 <a href="{{ url_for('admin.dashboard') }}" class="menu__link">Admin panel</a>
                             </li>

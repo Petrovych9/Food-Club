@@ -25,7 +25,7 @@ def get_recipe(id):
 @adminBlueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    if current_user.role == 'admin':
+    if current_user.role == 'admin' or 'moderator':
         return render_template('admin.html', menu=menu(), user=current_user,
                                total_users=total_users(), total_recipes=total_recipes())
     else:
@@ -66,3 +66,17 @@ def dashboard_recipes_for_submit():
         db.session.commit()
 
     return render_template('admin_recipes_for_submit.html', menu=menu(), user=current_user, recipes=recipes)
+
+
+@adminBlueprint.route('/new-role', methods=['GET', 'POST'])
+@login_required
+def dashboard_user_role():
+    if request.method == "POST":
+        user_id = request.form.get('user_id')
+        role = request.form.get('user_role')
+        user = User.query.filter_by(id=user_id).first()
+        user.role = role
+        db.session.commit()
+        flask.flash(f'User {user.id} now is {role}!', category='success')
+
+    return render_template('admin_new_role.html', menu=menu(), user=current_user)

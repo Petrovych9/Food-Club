@@ -7,6 +7,9 @@
             <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_users') }}">Users</a></li>
             <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_recipes') }}">Recipes</a></li>
             <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_recipes_for_submit') }}">Recipes for submit</a></li>
+            {% if user.role == 'admin' %}
+            <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_user_role') }}">Change user's role</a></li>
+            {% endif %}
         </ul>
     </div>
 
