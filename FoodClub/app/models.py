@@ -9,6 +9,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     phone = db.Column(db.Integer)
     password = db.Column(db.String(150))
+    # new column 26.06.2023
+    role = db.Column(db.String(20))
     recipes = db.relationship('Recipe', backref=db.backref('user'))
 
 

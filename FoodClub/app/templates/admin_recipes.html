@@ -1,0 +1,34 @@
+{% extends 'admin.html' %}
+
+{% block admin_content %}
+<div class="content__table table">
+    <h1 class="table__title">Recipes</h1>
+    <div class="table__body">
+        <ul class="table__list list-table">
+            <ul class="list-table_items title">id
+                <li class="table__item title">status</li>
+                <li class="table__item title">user_id</li>
+                <li class="table__item title">dish_name</li>
+                <li class="table__item title">cooking_time</li>
+            </ul>
+            {% for recipe in recipes %}
+            <ul class="list-table_items">{{recipe.id}}
+                <li class="table__item">{{recipe.status}}</li>
+                <li class="table__item">{{recipe.user_id}}</li>
+                <li class="table__item">{{recipe.dish_name}}</li>
+                <li class="table__item">{{recipe.cooking_time}}</li>
+            </ul>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

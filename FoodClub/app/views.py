@@ -75,15 +75,13 @@ def new_recipe():
 def draft_recipes():
     if request.form:
         id = request.form['id']
-        print(request.form)
-        recipe = Recipe.query.filter_by(id=id).first()
-        return redirect(f'/my-drafts-edit/{id}')
+        return redirect(url_for('main.update_draft', recipe_id=id))
 
     recipes = Recipe.query.filter_by(status='Drafts', user_id=current_user.id).all()
     return render_template('my-drafts.html', menu=menu(), user=current_user, recipes=recipes)
 
 
-@mainBlueprint.route('/my-drafts-edit/<int:recipe_id>', methods=["POST", 'GET'])
+@mainBlueprint.route('/my-drafts/<int:recipe_id>', methods=["POST", 'GET'])
 @login_required
 def update_draft(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first()
@@ -133,6 +131,12 @@ def all_recipes():
     recipes = Recipe.query.filter_by(status='Published').all()
     return render_template('all-recipes.html', menu=menu(), user=current_user, recipes=recipes)
 
+
+@mainBlueprint.route('/recipe/<int:id>', methods=["POST", 'GET'])
+@login_required
+def recipe(id):
+    recipe = Recipe.query.filter_by(id=id).first()
+    return render_template('recipe.html', menu=menu(), user=current_user, recipe=recipe)
 
 @mainBlueprint.route('/profile')
 @login_required

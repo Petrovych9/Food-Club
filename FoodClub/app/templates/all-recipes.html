@@ -10,7 +10,7 @@
   <div class="card__body body-card">
     <div class="body-card__text">
       <div class="body-card__title">
-        <a href="" class="body-card__link">{{ recipe.dish_name }}</a>
+        <a href="{{ url_for('main.recipe', id=recipe.id) }}" class="body-card__link">{{ recipe.dish_name }}</a>
       </div>
       <div class="body-card__time">{{ recipe.cooking_time }}</div>
     </div>

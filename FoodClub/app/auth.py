@@ -34,7 +34,7 @@ def signup():
             flask.flash('Password too short', category="error")
         else:
             new_user = User(firstname=first_name, lastname=last_name,
-                           email=email, phone=phone,
+                           email=email, phone=phone, role='user',
                            password=generate_password_hash(password, method='scrypt'))
             db.session.add(new_user)
             db.session.commit()

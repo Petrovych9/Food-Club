@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page__admin">
+    <div class="admin__sidebar sidebar">
+        <ul class="sidebar__list">
+            <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_users') }}">Users</a></li>
+            <li class="sidebar__item"><a href="{{ url_for('admin.dashboard_recipes') }}">Recipes</a></li>
+        </ul>
+    </div>
+
+    <div class="admin__content content">
+        {% block admin_content %}
+        <div class="content__cards">
+            <div class="content__card">
+                <h2>Total Users</h2>
+                <div class="card__number">{{ total_users }}</div>
+            </div>
+            <div class="content__card">
+                <h2>Total Recipes</h2>
+                <div class="card__number">{{ total_recipes }}</div>
+            </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% endblock %}
+
+
+
+
+
+
+

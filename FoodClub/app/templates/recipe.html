@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page__recipe recipe">
+  <div class="recipe__part part-recipe">
+    <div class="part-recipe__title title-part-recipe">
+      <div class="title-part-recipe__text">{{ recipe.dish_name }}</div>
+      <div class="title-part-recipe__icons icons-title-part-recipe">
+        <div class="icons-title-part-recipe__item">
+          <img src="../static/images/recipe/clock_icon.svg" alt="time">
+          <span>{{ recipe.cooking_time }}</span>
+        </div>
+        <div class="icons-title-part-recipe__item">
+          <img src="../static/images/recipe/star_icon.svg" alt="time">
+          <span>5</span>
+        </div>
+      </div>
+    </div>
+    <div class="part-recipe__description">
+      <p>{{ recipe.description }}</p>
+    </div>
+    <div class="part-recipe__ingredients ingredients-part-recipe">
+      <div class="ingredients-part-recipe__title">Ingredients</div>
+      <ul class="ingredients-part-recipe__list">
+        {% for line in recipe.ingredients.split('\n') %}
+        <li class="ingredients-part-recipe__item">{{line}}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="recipe__part">
+    <img src="data:image/jpeg;base64,{{ recipe.image }}" alt="image">
+  </div>
+</div>
+
+{% endblock %}
