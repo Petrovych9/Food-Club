@@ -3,7 +3,7 @@ from flask import Blueprint,render_template, request
 from flask_login import current_user, login_required
 
 from .menu import menu
-from .models import Recipe,User
+from .models import Recipe,User, Category
 from . import db
 
 adminBlueprint = Blueprint('admin', __name__)
@@ -38,14 +38,25 @@ def dashboard_users():
     return render_template('admin_users.html', menu=menu(), user=current_user,
                            users=users)
 
+@adminBlueprint.route('/new-role', methods=['GET', 'POST'])
+@login_required
+def dashboard_user_role():
+    if request.method == "POST":
+        user_id = request.form.get('user_id')
+        role = request.form.get('user_role')
+        user = User.query.filter_by(id=user_id).first()
+        user.role = role
+        db.session.commit()
+        flask.flash(f'User {user.id} now is {role}!', category='success')
+
+    return render_template('admin_new_role.html', menu=menu(), user=current_user)
+
 
 @adminBlueprint.route('/recipes', methods=['GET', 'POST'])
 @login_required
 def dashboard_recipes():
     recipes = Recipe.query.all()
     return render_template('admin_recipes.html', menu=menu(), user=current_user, recipes=recipes)
-
-
 
 
 @adminBlueprint.route('/recipes-submission', methods=['GET', 'POST'])
@@ -68,15 +79,14 @@ def dashboard_recipes_for_submit():
     return render_template('admin_recipes_for_submit.html', menu=menu(), user=current_user, recipes=recipes)
 
 
-@adminBlueprint.route('/new-role', methods=['GET', 'POST'])
+@adminBlueprint.route('/manage-categories', methods=['GET', 'POST'])
 @login_required
-def dashboard_user_role():
+def dashboard_categories():
     if request.method == "POST":
-        user_id = request.form.get('user_id')
-        role = request.form.get('user_role')
-        user = User.query.filter_by(id=user_id).first()
-        user.role = role
+        new_category_name = request.form.get('category_name')
+        new_category = Category(name=new_category_name)
+        db.session.add(new_category)
         db.session.commit()
-        flask.flash(f'User {user.id} now is {role}!', category='success')
+        flask.flash(f'Category {new_category_name} added!', category='success')
 
-    return render_template('admin_new_role.html', menu=menu(), user=current_user)
+    return render_template('admin_manage_categories.html', menu=menu(), user=current_user)

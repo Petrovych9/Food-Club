@@ -37,7 +37,7 @@ class Recipe(db.Model):
     status = db.Column(db.String(20))   # new column 26.06.2023
 
     # new relationship 29.06.2023
-    categories = db.relationship('Category', secondary=recipe_category, backref=db.backref('recipes', lazy='dynamic'))
+    categories = db.relationship('Category', secondary=recipe_category, backref=db.backref('recipe', lazy='dynamic'))
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -45,7 +45,5 @@ class Recipe(db.Model):
 class Category(db.Model):                           # new model 29.06.2023
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
-
-    recipes = db.relationship('Recipe', backref=db.backref('category'))
 
 
