@@ -82,11 +82,38 @@ def dashboard_recipes_for_submit():
 @adminBlueprint.route('/manage-categories', methods=['GET', 'POST'])
 @login_required
 def dashboard_categories():
+    categories = Category.query.all()
+    rename_button = 0
+    rename_id = -1
     if request.method == "POST":
-        new_category_name = request.form.get('category_name')
-        new_category = Category(name=new_category_name)
-        db.session.add(new_category)
-        db.session.commit()
-        flask.flash(f'Category {new_category_name} added!', category='success')
+        if request.form.get('category_name'):              #is not empty
+            new_category_name = request.form.get('category_name')
+            new_category = Category(name=new_category_name)
+            db.session.add(new_category)
+            db.session.commit()
+            flask.flash(f'Category {new_category_name} added!', category='success')
 
-    return render_template('admin_manage_categories.html', menu=menu(), user=current_user)
+        elif  request.form.get('delete'):
+            category = Category.query.filter_by(id=request.form.get('delete')).first()
+            db.session.delete(category)
+            db.session.commit()
+            flask.flash(f"Category {category.name} deleted!", category='success')
+
+        # elif request.form.get('rename'):
+        #     category = Category.query.filter_by(id=request.form.get('rename')).first()
+        #     rename_button = 1
+        #     rename_id = category.id
+        #     print(rename_id)
+        #     if request.method == 'POST':
+        #         print('submit',request.form.get('submit_rename'))
+        #         if request.form.get('submit_rename'):
+        #             flask.flash(f"Category renamed!", category='success')
+    categories = Category.query.all()
+    return render_template('admin_manage_categories.html', menu=menu(), user=current_user,categories=categories, rename_button=rename_button,rename_id=rename_id)
+
+
+@adminBlueprint.route('/manage-categories', methods=['GET', 'POST'])
+@login_required
+def dashboard_categories_all():
+    categories = Category.query.all()
+    return render_template('admin_manage_categories.html', menu=menu(), user=current_user, categories=categories)
