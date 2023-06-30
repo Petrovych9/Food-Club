@@ -16,7 +16,8 @@ mainBlueprint = Blueprint('main', __name__)
 @mainBlueprint.route("/", methods=["GET", ' POST'])
 @login_required
 def home():
-    return render_template('base.html', menu=menu(), user=current_user)
+    recipes = Recipe.query.order_by(Recipe.id.desc()).limit(5).all()
+    return render_template('home.html', menu=menu(), user=current_user, recipes=recipes)
 
 def convert_image(image):
     img = image.read()

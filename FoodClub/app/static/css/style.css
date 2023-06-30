@@ -466,3 +466,11 @@ h1 {
 /*Admin off*/
 
 
+/*Recent recipes ON*/
+.page__recent{
+    display:flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.page__title{}
+/*Recent recipes OFF*/

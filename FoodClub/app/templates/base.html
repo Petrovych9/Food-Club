@@ -13,7 +13,7 @@
         <header class="header">
             <div class="header__container">
                 <div class="header__body">
-                    <a href="/" class="header__logo">
+                    <a href="{{url_for('main.home')}}" class="header__logo">
                     Food Club
                     </a>
                     <nav class="header__menu menu">
@@ -68,8 +68,9 @@
             {% endif %}
             {% endwith %}
             <div class="page__container">
+                 <h5 class="hello">User {{user.firstname}}</h5>
                 {% block content %}
-                <h1 autofocus class="hello">Hello, User {{user.firstname}}</h1>
+
                 {% endblock %}
             </div>
         </main>

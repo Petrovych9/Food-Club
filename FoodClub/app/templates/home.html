@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page__recent">
+  <div class="page__title"><h1>Recent recipes</h1></div>
+  <div class="page__cards">
+  {% for recipe in recipes %}
+  <div class="page__card card">
+  <div class="card__image">
+    <img src="data:image/jpeg;base64,{{recipe.image}}" alt="image">'
+  </div>
+  <div class="card__body body-card">
+    <div class="body-card__text">
+      <div class="body-card__title">
+        <a href="{{ url_for('main.recipe', id=recipe.id) }}" class="body-card__link">{{ recipe.dish_name }}</a>
+      </div>
+      <div class="body-card__time">{{ recipe.cooking_time }}</div>
+    </div>
+    <div class="body-card__icons">
+      <div class="body-card__rating"></div>
+      <div class="body-card__buttons">
+        <button class="body-card__like">
+          <img src="{{ url_for('static', filename='images/all_recipe/like.svg') }}" alt="like">
+        </button>
+        <button class="body-card__comment">
+          <img src="{{ url_for('static', filename='images/all_recipe/comments.svg') }}" alt="comments">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
