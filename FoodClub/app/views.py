@@ -5,7 +5,7 @@ import base64
 from flask import Blueprint,render_template, request, url_for, redirect
 from flask_login import current_user, login_required
 from .menu import menu
-from .models import Recipe
+from .models import Recipe, User
 from . import db
 
 
@@ -16,7 +16,7 @@ mainBlueprint = Blueprint('main', __name__)
 @mainBlueprint.route("/", methods=["GET", ' POST'])
 @login_required
 def home():
-    recipes = Recipe.query.order_by(Recipe.id.desc()).limit(5).all()
+    recipes = Recipe.query.order_by(Recipe.id.desc()).limit(6).all()
     return render_template('home.html', menu=menu(), user=current_user, recipes=recipes)
 
 def convert_image(image):
@@ -139,7 +139,16 @@ def recipe(id):
     recipe = Recipe.query.filter_by(id=id).first()
     return render_template('recipe.html', menu=menu(), user=current_user, recipe=recipe)
 
-@mainBlueprint.route('/profile')
+@mainBlueprint.route('/profile', methods=["POST", 'GET'])
 @login_required
 def profile():
+    user = User.query.filter_by(id=current_user.id).first()
+    if request.method == 'POST':
+        user.firstname = request.form.get('firstname')
+        user.lastname = request.form.get('lastname')
+        user.email = request.form.get('email')
+        user.phone = request.form.get('phone')
+        user.password = request.form.get('password')
+        db.session.commit()
+        flask.flash('Information updated!', category='success')
     return render_template('profile.html', menu=menu(), user=current_user)
