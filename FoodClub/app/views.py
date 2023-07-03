@@ -16,7 +16,7 @@ mainBlueprint = Blueprint('main', __name__)
 @mainBlueprint.route("/", methods=["GET", ' POST'])
 @login_required
 def home():
-    recipes = Recipe.query.order_by(Recipe.id.desc()).limit(6).all()
+    recipes = Recipe.query.filter_by(status='Published').order_by(Recipe.id.desc()).limit(6).all()
     return render_template('home.html', menu=menu(), user=current_user, recipes=recipes)
 
 def convert_image(image):
@@ -129,6 +129,10 @@ def update_draft(recipe_id):
             recipe.status = 'Drafts'
             db.session.commit()
             flask.flash("Recipe saved to drafts!", category='success')
+        elif button == 'Delete':
+            db.session.delete(recipe)
+            db.session.commit()
+            flask.flash("Recipe deleted!", category='success')
 
         elif not selected_categories:
             flask.flash("Your recipe in your drafts! You can send for review after selection category.",
@@ -138,10 +142,6 @@ def update_draft(recipe_id):
             recipe.status = 'need-submit'
             db.session.commit()
             flask.flash("Recipe sent for submission!", category="success")
-        elif button == 'Delete':
-            db.session.delete(recipe)
-            db.session.commit()
-            flask.flash("Recipe deleted!", category='success')
         else:
             recipe.status = "Drafts"
             recipe.dish_name = 'Causing some error'
