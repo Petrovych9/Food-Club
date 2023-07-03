@@ -68,6 +68,14 @@
         <input type="file" name="photo" id="photo" accept=".jpeg, .png, .jpg" >
       </div>
 
+      <div class="container_check">
+        <ul class="ks-cboxtags">
+            {% for category in categories %}
+            <li><input type="checkbox" id="{{category.name}}" value="{{category.name}}"><label for="{{category.name}}">{{category.name}}</label></li>
+            {% endfor %}
+          </ul>
+      </div>
+
       <button type="submit" class="formbold-btn drafts" name="button" value="Drafts">Save to drafts</button>
       <button type="submit" class="formbold-btn delete" name="button" value="Delete">Delete</button>
       <button type="submit" class="formbold-btn" name="button" value="need-submit">Send to review</button>

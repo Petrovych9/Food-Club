@@ -86,6 +86,7 @@ def draft_recipes():
 @mainBlueprint.route('/my-drafts/<int:recipe_id>', methods=["POST", 'GET'])
 @login_required
 def update_draft(recipe_id):
+    categories = Category.query.all()
     recipe = Recipe.query.filter_by(id=recipe_id).first()
     if request.method == 'POST':
         recipe.dish_name = request.form['dish_name']
@@ -124,7 +125,7 @@ def update_draft(recipe_id):
             flask.flash('Error!!! Set "Drafts" status for recipe. Edit and publish its later.', category='error')
 
         return redirect(url_for('main.draft_recipes'))
-    return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id)
+    return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id, categories=categories)
 
 
 @mainBlueprint.route('/all-recipes', methods=["POST", 'GET'])
