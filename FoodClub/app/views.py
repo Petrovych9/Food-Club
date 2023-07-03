@@ -31,6 +31,19 @@ def convert_image(image):
         base64_data = base64.b64encode(img).decode('utf-8')
         return base64_data
 
+def add_recipe_category(recipe, categories):
+    if categories:
+        for category in categories:
+            cat = Category.query.get(category)
+            recipe.categories.append(cat)
+        return 1
+    else:
+        if recipe.status != 'Drafts':
+            flask.flash("Your recipe in your drafts! You can send for review after selection category.", category='error')
+            recipe.status = "Drafts"
+            return 0
+        else:return 1
+
 @mainBlueprint.route('/new-recipe', methods=["POST", 'GET'])
 @login_required
 def new_recipe():
@@ -45,7 +58,6 @@ def new_recipe():
         selected_categories = request.form.getlist('checkbox')
         button = request.form['button']
 
-        print(request.form)
         if dish_name != '':
             if button == 'Drafts':
                 status = 'Drafts'
@@ -64,18 +76,16 @@ def new_recipe():
                 status=status,
                 user_id=current_user.id)
 
-            for selected_category in selected_categories:
-                category = Category.query.get(selected_category)
-                new_rec.categories.append(category)
+            add_categ = add_recipe_category(new_rec, selected_categories)
 
             db.session.add(new_rec)
             db.session.commit()
-
-            if status =='need-submit':
-                flask.flash("Recipe sent for submission!", category="success")
-            elif status == 'Drafts':
-                flask.flash("Recipe in your drafts!", category="success")
-            else:flask.flash("Occur some error. Try again", category="error")
+            if add_categ != 0:
+                if new_rec.status =='need-submit':
+                    flask.flash("Recipe sent for submission!", category="success")
+                elif new_rec.status == 'Drafts':
+                    flask.flash("Recipe in your drafts!", category="success")
+                else:flask.flash("Occur some error. Try again", category="error")
 
         else: flask.flash("Enter a dish name", category='error')
 
@@ -106,32 +116,28 @@ def update_draft(recipe_id):
         recipe.ingredients = request.form['ingredients']
         image = request.files['photo']
         new_selected_categories = request.form.getlist('checkbox')
+        button = request.form['button']
+
         recipe.categories.clear()
+        add_categor = add_recipe_category(recipe, new_selected_categories)
 
-        for selected_category in new_selected_categories:
-            category = Category.query.get(selected_category)
-            recipe.categories.append(category)
-
-        if image.filename == "":
-            print('Photo left old')
-        else:
+        if image.filename != "":
             recipe.image=convert_image(image)
             print("Photo updated")
 
-        button = request.form['button']
-        status = recipe.status
         if button == 'Drafts':
-            recipe.status ='Drafts'
+            recipe.status = 'Drafts'
             db.session.commit()
-            print(recipe.status, recipe.id)
             flask.flash("Recipe saved to drafts!", category='success')
 
-        elif button == 'need-submit':
+        elif not selected_categories:
+            flask.flash("Your recipe in your drafts! You can send for review after selection category.",
+                        category='error')
+        elif  selected_categories:
+            button == 'need-submit'
             recipe.status = 'need-submit'
             db.session.commit()
-            print(recipe.status, recipe.id)
             flask.flash("Recipe sent for submission!", category="success")
-
         elif button == 'Delete':
             db.session.delete(recipe)
             db.session.commit()
@@ -141,6 +147,7 @@ def update_draft(recipe_id):
             recipe.dish_name = 'Causing some error'
             db.session.commit()
             flask.flash('Error!!! Set "Drafts" status for recipe. Edit and publish its later.', category='error')
+
 
         return redirect(url_for('main.draft_recipes'))
     return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id,
