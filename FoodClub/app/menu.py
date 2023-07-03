@@ -2,6 +2,7 @@ from flask import url_for
 def menu():
     menu = {
         'Home': url_for('main.home'),
+        'Categories': url_for('main.categories'),
         'All recipes': url_for('main.all_recipes'),
         'New recipe': url_for('main.new_recipe'),
         'My drafts': url_for('main.draft_recipes'),

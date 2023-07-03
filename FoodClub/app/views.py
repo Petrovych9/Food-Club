@@ -12,13 +12,6 @@ from . import db
 mainBlueprint = Blueprint('main', __name__)
 
 
-#main
-@mainBlueprint.route("/", methods=["GET", ' POST'])
-@login_required
-def home():
-    recipes = Recipe.query.filter_by(status='Published').order_by(Recipe.id.desc()).limit(6).all()
-    return render_template('home.html', menu=menu(), user=current_user, recipes=recipes)
-
 def convert_image(image):
     img = image.read()
     if img == b'':
@@ -59,6 +52,23 @@ def send_feedback(status):
         return flask.flash("Recipe deleted!", category='success')
     else:
         return flask.flash("Occur some error. Try again", category="error")
+
+
+#main
+@mainBlueprint.route("/", methods=["GET", ' POST'])
+@login_required
+def home():
+    recipes = Recipe.query.filter_by(status='Published').order_by(Recipe.id.desc()).limit(6).all()
+    return render_template('home.html', menu=menu(), user=current_user, recipes=recipes)
+
+
+@mainBlueprint.route("/categories", methods=["GET", ' POST'])
+@login_required
+def categories():
+    all_categories = Category.query.all()
+    return render_template('categories.html', menu=menu(), user=current_user, categories=all_categories)
+
+
 
 
 @mainBlueprint.route('/new-recipe', methods=["POST", 'GET'])
