@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from .menu import menu
 from .models import Recipe,User, Category
 from . import db
+from .views import convert_image
 
 adminBlueprint = Blueprint('admin', __name__)
 
@@ -86,14 +87,20 @@ def dashboard_categories():
     rename_button = 0
     rename_id = -1
     if request.method == "POST":
-        if request.form.get('category_name'):              #is not empty
-            new_category_name = request.form.get('category_name')
-            new_category = Category(name=new_category_name)
-            db.session.add(new_category)
-            db.session.commit()
-            flask.flash(f'Category {new_category_name} added!', category='success')
+        if request.form.get('add_category'):
+            if request.form.get('category_name'):              #is not empty
+                if request.files.get('photos'):
+                    new_category_name = request.form.get('category_name')
+                    image = request.files.get('photos')
 
-        elif  request.form.get('delete'):
+                    new_category = Category(name=new_category_name, image=convert_image(image))
+                    db.session.add(new_category)
+                    db.session.commit()
+                    flask.flash(f'Category {new_category_name} added!', category='success')
+                else: flask.flash('Select category image',category='error')
+            else:flask.flash('Enter category name',category='error')
+
+        if request.form.get('delete'):
             category = Category.query.filter_by(id=request.form.get('delete')).first()
             db.session.delete(category)
             db.session.commit()
@@ -109,7 +116,8 @@ def dashboard_categories():
         #         if request.form.get('submit_rename'):
         #             flask.flash(f"Category renamed!", category='success')
     categories = Category.query.all()
-    return render_template('admin_manage_categories.html', menu=menu(), user=current_user,categories=categories, rename_button=rename_button,rename_id=rename_id)
+    return render_template('admin_manage_categories.html', menu=menu(), user=current_user,categories=categories,
+                           rename_button=rename_button,rename_id=rename_id)
 
 
 @adminBlueprint.route('/manage-categories', methods=['GET', 'POST'])

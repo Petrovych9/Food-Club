@@ -45,5 +45,6 @@ class Recipe(db.Model):
 class Category(db.Model):                           # new model 29.06.2023
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
+    image = db.Column(db.Text)      # new column 3.07.2023
 
 

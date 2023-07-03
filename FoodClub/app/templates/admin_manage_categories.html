@@ -18,8 +18,16 @@
           <label for="category_name" class="formbold-form-label">Category Name</label>
           <input type="text" name="category_name" id="category_name" class="formbold-form-input"/>
         </div>
-        <button type="submit" class="formbold-btn" name="add_category" value="1">Add</button>
+          <div class="photos">
+            <img src="/static/images/new_recipe/01.svg" alt="add photo">
+            <label for="photo">Select image</label>
+            <input type="file" name="photo" id="photo" accept=".jpeg, .png, .jpg">
         </div>
+      </div>
+
+
+        <button type="submit" class="formbold-btn" name="add_category" value="1">Add</button>
+
     </form>
     <form action="{{url_for('admin.dashboard_categories')}}" method="post">
         <div class="content__table table">
@@ -126,6 +134,7 @@
     display: flex;
     gap: 20px;
     margin-bottom: 15px;
+    align-items: end;
   }
   .formbold-input-flex > div {
     width: 40%;
@@ -191,13 +200,10 @@
   }
 
   .photos {
-    margin: 0 auto;
-    border: 1px dashed var(--text, #3C322E);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
-    width: 275px;
-    padding: 20px 20px;
+
     justify-content: center;
     align-items: center;
   }
