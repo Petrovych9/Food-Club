@@ -550,3 +550,24 @@ ul.ks-cboxtags li input[type="checkbox"]:focus + label {
   border: 2px solid #e9a1ff;
 }
 /*CHECKBOXES OFF*/
+
+/*CATEGORY ON*/
+.card_category{
+    border-radius: 50%;
+    display:flex;
+    gap: 0px;
+    justify-content:center;
+    align-items:center;
+}
+.card_category img:hover{
+    transform: scale(1.05);
+    transition: all ease .8s;
+}
+
+.body-card__title_category{
+   text-align: center;
+}
+.body-card__link_category{
+   text-align: center;
+}
+/*CATEGORY OFF*/
