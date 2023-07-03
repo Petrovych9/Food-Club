@@ -71,7 +71,17 @@
       <div class="container_check">
         <ul class="ks-cboxtags">
             {% for category in categories %}
-            <li><input type="checkbox" id="{{category.name}}" value="{{category.name}}"><label for="{{category.name}}">{{category.name}}</label></li>
+             {% if category in selected_categories %}
+            <li>
+              <input type="checkbox"  name="checkbox" id="{{category.name}}" value="{{category.id}}" checked>
+              <label for="{{category.name}}">{{category.name}}</label>
+            </li>
+              {% else %}
+            <li>
+              <input type="checkbox"  name="checkbox" id="{{category.name}}" value="{{category.id}}" >
+              <label for="{{category.name}}">{{category.name}}</label>
+            </li>
+              {% endif %}
             {% endfor %}
           </ul>
       </div>

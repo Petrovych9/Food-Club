@@ -5,7 +5,7 @@ import base64
 from flask import Blueprint,render_template, request, url_for, redirect
 from flask_login import current_user, login_required
 from .menu import menu
-from .models import Recipe, User, Category
+from .models import Recipe, User, Category, recipe_category
 from . import db
 
 
@@ -34,13 +34,15 @@ def convert_image(image):
 @mainBlueprint.route('/new-recipe', methods=["POST", 'GET'])
 @login_required
 def new_recipe():
-    categories = Category.query.all()
+    categories_all = Category.query.all()
+
     if request.method == "POST":
         dish_name = request.form['dish_name']
         cooking_time = request.form['cooking_time']
         description = request.form['description']
         ingredients = request.form['ingredients']
         image = request.files['photo']
+        selected_categories = request.form.getlist('checkbox')
         button = request.form['button']
 
         print(request.form)
@@ -61,15 +63,23 @@ def new_recipe():
                 image=convert_image(image),
                 status=status,
                 user_id=current_user.id)
+
+            for selected_category in selected_categories:
+                category = Category.query.get(selected_category)
+                new_rec.categories.append(category)
+
             db.session.add(new_rec)
             db.session.commit()
+
             if status =='need-submit':
                 flask.flash("Recipe sent for submission!", category="success")
             elif status == 'Drafts':
                 flask.flash("Recipe in your drafts!", category="success")
             else:flask.flash("Occur some error. Try again", category="error")
+
         else: flask.flash("Enter a dish name", category='error')
-    return render_template('new-recipe.html', menu=menu(), user=current_user, categories=categories)
+
+    return render_template('new-recipe.html', menu=menu(), user=current_user, categories=categories_all)
 
 
 @mainBlueprint.route('/my-drafts', methods=["POST", 'GET'])
@@ -86,14 +96,22 @@ def draft_recipes():
 @mainBlueprint.route('/my-drafts/<int:recipe_id>', methods=["POST", 'GET'])
 @login_required
 def update_draft(recipe_id):
-    categories = Category.query.all()
     recipe = Recipe.query.filter_by(id=recipe_id).first()
+    selected_categories = recipe.categories
+    categories = Category.query.all()
     if request.method == 'POST':
         recipe.dish_name = request.form['dish_name']
         recipe.cooking_time = request.form['cooking_time']
         recipe.description = request.form['description']
         recipe.ingredients = request.form['ingredients']
         image = request.files['photo']
+        new_selected_categories = request.form.getlist('checkbox')
+        recipe.categories.clear()
+
+        for selected_category in new_selected_categories:
+            category = Category.query.get(selected_category)
+            recipe.categories.append(category)
+
         if image.filename == "":
             print('Photo left old')
         else:
@@ -125,7 +143,8 @@ def update_draft(recipe_id):
             flask.flash('Error!!! Set "Drafts" status for recipe. Edit and publish its later.', category='error')
 
         return redirect(url_for('main.draft_recipes'))
-    return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id, categories=categories)
+    return render_template('my-drafts-edit.html',menu=menu(), user=current_user, recipe=recipe, id=recipe.id,
+                           categories=categories, selected_categories=selected_categories)
 
 
 @mainBlueprint.route('/all-recipes', methods=["POST", 'GET'])
