@@ -5,7 +5,7 @@ import base64
 from flask import Blueprint,render_template, request, url_for, redirect
 from flask_login import current_user, login_required
 from .menu import menu
-from .models import Recipe, User
+from .models import Recipe, User, Category
 from . import db
 
 
@@ -34,6 +34,7 @@ def convert_image(image):
 @mainBlueprint.route('/new-recipe', methods=["POST", 'GET'])
 @login_required
 def new_recipe():
+    categories = Category.query.all()
     if request.method == "POST":
         dish_name = request.form['dish_name']
         cooking_time = request.form['cooking_time']
@@ -68,7 +69,7 @@ def new_recipe():
                 flask.flash("Recipe in your drafts!", category="success")
             else:flask.flash("Occur some error. Try again", category="error")
         else: flask.flash("Enter a dish name", category='error')
-    return render_template('new-recipe.html', menu=menu(), user=current_user)
+    return render_template('new-recipe.html', menu=menu(), user=current_user, categories=categories)
 
 
 @mainBlueprint.route('/my-drafts', methods=["POST", 'GET'])
