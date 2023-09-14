@@ -1,18 +1,18 @@
 # Food Club
 
-> Platform of presentation, creation and managing recipes
+> Recipe Creation Hub
 
-# Get started TODO
-Clone the repo
+# Get started 
+Clone the repository
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone git@github.com:Petrovych9/Food-Club.git
    ```
 # Features
 1. User registration and authentication 
-2. CRUD operation to recipes
-3. Recipe moderation
-4. User's roles
-4. Administration panel for manging users and recipes
+2. CRUD operations for recipes
+3. Recipe moderation system
+4. User's roles and permissions
+4. Administration panel for users and recipe management
 
 ## Built With 
 - Python 
@@ -27,6 +27,6 @@ Clone the repo
 
 ### Other projects
 
-- [Mini Projects]()
-- current - [Food Club]()
+- [Mini Projects](https://github.com/Petrovych9/Mini-Masterworks)
+- current - [Food Club](https://github.com/Petrovych9/Food-Club)
 - [Training Club]()
