@@ -27,6 +27,6 @@ Clone the repository
 
 ### Other projects
 
-- [Mini Projects](https://github.com/Petrovych9/Mini-Masterworks)
+- [Mini Masterworks](https://github.com/Petrovych9/Mini-Masterworks)
 - current - [Food Club](https://github.com/Petrovych9/Food-Club)
 - [Training Club]()
